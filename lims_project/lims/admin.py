@@ -1,5 +1,6 @@
 from __future__ import print_function
 import sys
+import datetime
 
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry, DELETION
@@ -22,6 +23,7 @@ from lims.import_export_resources import SampleResource, ContainerResource
 try:
     from sh import lpr
 except ImportError:
+    print("lpr could not be imported", file=sys.stderr)
     pass
 
 
@@ -47,13 +49,15 @@ def print_barcode(modeladmin, request, queryset):
         ct = ContentType.objects.get_for_model(queryset.model)
         btm = BarcodeToModel.objects.get(content_type=ct)
         fields = [getattr(q, f) for f in btm.barcode_fields.split()]
-        print("len: %d" % len(fields), file=sys.stderr)
+        # Shorten dates
+        fields = [f.isoformat().split("T")[0] if isinstance(f, datetime.datetime) else f for f in fields]
+        #print("len: %d" % len(fields), file=sys.stderr)
         # add extra fields if not enough fields are given
         if len(fields) < 4:
             fields += (4 - len(fields)) * [""]
         out = btm.barcode.template.format(*fields)
         print(out, file=sys.stderr)
-        lpr("-P", btm.barcode.name, _in=out)
+        #lpr("-P", btm.barcode.name, '-o', 'raw', _in=out)
 print_barcode.short_description = "Print barcode"
 
 
