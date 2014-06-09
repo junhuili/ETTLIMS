@@ -1,8 +1,7 @@
 from __future__ import print_function
 import sys
-import datetime
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin.models import LogEntry, DELETION
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -10,13 +9,14 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
+from django.template import Context, Template
 
 from import_export.admin import ImportExportModelAdmin
 
 from lims.models import Apparatus, ApparatusSubdivision, Collaborator, Sample, SampleType, SampleLocation, \
     Protocol, ExtractedCell, ExtractedDNA, QPCR, RTMDA, SAGPlate, \
     SAGPlateDilution, DNALibrary, SequencingRun, Metagenome, Primer, \
-    Amplicon, SAG, DNAFromPureCulture, ReadFile, Container, ContainerType, BarcodePrinter, BarcodeToModel
+    Amplicon, SAG, DNAFromPureCulture, ReadFile, Container, ContainerType, BarcodePrinter, BarcodeToModel, BarcodeTemplate
 
 from lims.import_export_resources import SampleResource, ContainerResource
 
@@ -39,26 +39,40 @@ def generate_all_fields_admin(classname):
                                    ["notes"]])})
 
 # Generate standard admin classes for the standard_models
-standard_models = [QPCR, RTMDA, Apparatus, ApparatusSubdivision, SampleLocation, SampleType, ContainerType, BarcodePrinter, BarcodeToModel]
+standard_models = [QPCR, RTMDA, Apparatus, ApparatusSubdivision, SampleLocation, SampleType, ContainerType, BarcodePrinter, BarcodeToModel, BarcodeTemplate]
 for model in standard_models:
     admin.site.register(model, generate_all_fields_admin(model))
 
 
-def print_barcode(modeladmin, request, queryset):
-    for q in queryset:
-        ct = ContentType.objects.get_for_model(queryset.model)
-        btm = BarcodeToModel.objects.get(content_type=ct)
-        fields = [getattr(q, f) for f in btm.barcode_fields.split()]
-        # Shorten dates
-        fields = [f.isoformat().split("T")[0] if isinstance(f, datetime.datetime) else f for f in fields]
-        #print("len: %d" % len(fields), file=sys.stderr)
-        # add extra fields if not enough fields are given
-        if len(fields) < 4:
-            fields += (4 - len(fields)) * [""]
-        out = btm.barcode.template.format(*fields)
-        print(out, file=sys.stderr)
-        #lpr("-P", btm.barcode.name, '-o', 'raw', _in=out)
-print_barcode.short_description = "Print barcode"
+def barcode_function_gen(model):
+    ct = ContentType.objects.get_for_model(model)
+    btms = BarcodeToModel.objects.filter(content_type=ct)
+
+    action_functions = []
+
+    for btm in btms:
+        print(btm, file=sys.stderr)
+
+        def print_barcode(modeladmin, request, queryset):
+            for q in queryset:
+                fields = ["{{{{ o.{f} }}}}".format(f=f) for f in btm.barcode_fields.split()]
+                # Shorten dates
+                #fields = [f.isoformat().split("T")[0] if isinstance(f, datetime.datetime) else f for f in fields]
+                #print("len: %d" % len(fields), file=sys.stderr)
+                # throw error if not enough fields are given
+                if len(fields) < 4:
+                    print("Not enough fields given", file=sys.stderr)
+                out = btm.template.template.format(*fields)
+                t = Template(out)
+                c = Context({"o": q})
+                #print(out, file=sys.stderr)
+                print(t.render(c), file=sys.stderr)
+                #lpr("-P", btm.printer.name, '-o', 'raw', _in=out)
+                messages.success(request, "Printing {} barcode on {} for {}".format(btm.template, btm.printer, q))
+        action_functions.append((unicode(btm.template), (print_barcode, unicode(btm.template), "Print barcode {} on {}".format(btm.template, btm.printer))))
+        print(action_functions, file=sys.stderr)
+
+    return action_functions
 
 
 class ContainerInline(generic.GenericTabularInline):
@@ -181,7 +195,12 @@ class SampleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     inlines = [
         ContainerInline,
     ]
-    actions = [print_barcode]
+    #actions = [gen_hello("faka"), gen_hello("sup")] + [gen_hello("unkowit")]
+
+    def get_actions(self, request):
+        actions = super(SampleAdmin, self).get_actions(request)
+        print(actions, file=sys.stderr)
+        return dict(barcode_function_gen(Sample))
 
     #class Media:
     #    js = ('lims/admin_edit_button.js',)

@@ -77,10 +77,22 @@ class ApparatusSubdivision(models.Model):
 
 class BarcodePrinter(models.Model):
     name = models.CharField(max_length=100)
-    template = models.TextField(blank=True)
 
     def __unicode__(self):
         return unicode(self.name)
+
+
+class BarcodeTemplate(models.Model):
+    name = models.CharField(max_length=100)
+    template = models.TextField(blank=True, help_text="Fill in each possible "
+            "field with a {}.")
+
+    def __unicode__(self):
+        return unicode(self.name)
+
+    @property
+    def nr_fields(self):
+        return self.template.count("{}")
 
 
 class BarcodeToModel(models.Model):
@@ -94,11 +106,17 @@ class BarcodeToModel(models.Model):
         models.Q(app_label="lims", model="sagplatedilution") | \
         models.Q(app_label="lims", model="dnalibrary")
     content_type = models.ForeignKey(ContentType, limit_choices_to=qlimit, null=True, blank=True)
-    barcode = models.ForeignKey(BarcodePrinter)
-    barcode_fields = models.TextField(blank=True, help_text="Specify space-separated list of fields")
+    printer = models.ForeignKey(BarcodePrinter)
+    template = models.ForeignKey(BarcodeTemplate)
+    barcode_fields = models.TextField(help_text="Specify "
+            "space-separated list of fields. You are allowed "
+            "to use django template style syntax to edit the resulting text.")
+
+    class Meta:
+        unique_together = (("content_type", "printer", "template"),)
 
     def __unicode__(self):
-        return unicode("{0} - {1}".format(self.barcode, self.content_type))
+        return unicode("{0} - {1} - {2}".format(self.template, self.printer, self.content_type))
 
 
 class CanPrintBarcode(object):
@@ -504,8 +522,12 @@ class Sample(StorablePhysicalObject, models.Model):
 
     @property
     def username(self):
-        ct = ContentType.objects.get_for_model(self.__class__)
-        return LogEntry.objects.filter(content_type=ct).first().user.username or "unknown"
+        ct = ContentType.objects.get_for_model(type(self))
+        first_log = LogEntry.objects.filter(content_type=ct, object_id=self.id).first()
+        if first_log:
+            return first_log.user.username
+        else:
+            return "unknown"
 
 
 class Protocol(models.Model):
