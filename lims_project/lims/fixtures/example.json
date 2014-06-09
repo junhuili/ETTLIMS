@@ -1474,5 +1474,54 @@
         "type": 4,
         "parent": 3
     }
+},
+{
+    "pk": 1, 
+    "model": "lims.barcodetemplate", 
+    "fields": {
+        "name": "CTT", 
+        "template": "^XA\r\n^MTT\r\n^MD15\r\n^FO5,10^BY2,2.5,20^BCN,38,Y,N,N^FD{}^FS \r\n^FO430,10^A0N,25,25^FD{}^FS\r\n^FO430,38^A0N,25,25^FD{}^FS\r\n^FO430,65^A0N,22,18^FD{}^FS\r\n^XZ"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lims.barcodetemplate", 
+    "fields": {
+        "name": "JTT", 
+        "template": "^XA\r\n^MTT\r\n^MD15\r\n^FO190,35^BY2,2.5,90^BXN,4,200,,,^FD{}^FS\r\n^FO265,35^A0N35,25^FD{}^FS\r\n^FO265,60^A0N25,18^FD{}^FS\r\n^FO265,80^A0N35,25^FD{}^FS\r\n^FO190,105^A0N35,25^FD{}^FS\r\n^FO190,130^A0N35,25^FD{}^FS\r\n^FO530,55^BY2,2.5,90^BXN,4,200,,,^FD{}^FS\r\n^XZ"
+    }
+},
+{
+    "pk": 1, 
+    "model": "lims.barcodetomodel", 
+    "fields": {
+        "barcode_fields": "sample_type username collaborator|truncatechars:10 date|date:\"Y-m-d\"", 
+        "printer": 1, 
+        "template": 1, 
+        "content_type": [
+            "lims",
+            "sample"
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "lims.barcodetomodel", 
+    "fields": {
+        "barcode_fields": "barcode barcode date|date:\"Y-m-d\" sample_type collaborator username barcode", 
+        "printer": 1, 
+        "template": 2, 
+        "content_type": [
+            "lims",
+            "sample"
+        ]
+    }
+},
+{
+    "pk": 1, 
+    "model": "lims.barcodeprinter", 
+    "fields": {
+        "name": "GHPF6"
+    }
 }
 ]
