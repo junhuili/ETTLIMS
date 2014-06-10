@@ -8,5 +8,5 @@ Known issues
 Reporting issues
 ----------------
 An up to date list of issues can be found at:
-https://github.com/bils/scglims/issues. Check if your issue is there, if not
+https://github.com/bils/ettlims/issues. Check if your issue is there, if not
 add it.

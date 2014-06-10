@@ -5,8 +5,8 @@ Requirements
 
 * Python 2.7+
 * Django 1.6.1
-* Local: https://github.com/BILS/SCGLIMS/blob/master/lims_project/requirements/local.txt
-* Development: https://github.com/BILS/SCGLIMS/blob/master/lims_project/requirements/development.txt
+* Local: https://github.com/BILS/ETTLIMS/blob/master/lims_project/requirements/local.txt
+* Development: https://github.com/BILS/ETTLIMS/blob/master/lims_project/requirements/development.txt
 
 Installation
 --------------
@@ -15,7 +15,7 @@ Clone the repository to your computer:
 
 ::
     
-    git clone https://github.com/BILS/SCGLIMS
+    git clone https://github.com/BILS/ETTLIMS
 
 Local installation:
 
@@ -24,7 +24,7 @@ Local installation:
     pip install -r lims_project/requirements/local.txt
 
 
-Running SCGLIMS
+Running ETTLIMS
 ----------------
 
 Locally
