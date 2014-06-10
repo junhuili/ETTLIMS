@@ -27,6 +27,17 @@ class UIDManager(models.Manager):
         return self.get(uid=uid)
 
 
+class CreatedByUser(object):
+    @property
+    def username(self):
+        ct = ContentType.objects.get_for_model(type(self))
+        first_log = LogEntry.objects.filter(content_type=ct, object_id=self.id).first()
+        if first_log:
+            return first_log.user.username
+        else:
+            return "db-manager"
+
+
 class Apparatus(models.Model):
     """Device that stores physical objects, could be a closet/freezer, etc."""
     name = models.CharField(max_length=100)
@@ -104,7 +115,8 @@ class BarcodeToModel(models.Model):
         models.Q(app_label="lims", model="amplicon") | \
         models.Q(app_label="lims", model="sagplate") | \
         models.Q(app_label="lims", model="sagplatedilution") | \
-        models.Q(app_label="lims", model="dnalibrary")
+        models.Q(app_label="lims", model="dnalibrary") | \
+        models.Q(app_label="lims", model="container")
     content_type = models.ForeignKey(ContentType, limit_choices_to=qlimit, null=True, blank=True)
     printer = models.ForeignKey(BarcodePrinter)
     template = models.ForeignKey(BarcodeTemplate)
@@ -119,12 +131,7 @@ class BarcodeToModel(models.Model):
         return unicode("{0} - {1} - {2}".format(self.template, self.printer, self.content_type))
 
 
-class CanPrintBarcode(object):
-    def print_barcode(self):
-        return "ola"
-
-
-class ContainerType(models.Model):
+class ContainerType(CreatedByUser, models.Model):
     """The type of container e.g. petri dish, 384 well plate, bag, well,
     etc."""
     name = models.CharField(max_length=100)
@@ -432,7 +439,7 @@ class SampleLocation(models.Model):
         return [f.attname for f in self._meta.fields]
 
 
-class Sample(StorablePhysicalObject, models.Model):
+class Sample(CreatedByUser, StorablePhysicalObject, models.Model):
     uid = models.CharField("UID", max_length=30, unique=True,
         help_text="UID should consist of five alphanumeric characters. Only capitals allowed.")
 
@@ -541,7 +548,7 @@ class Protocol(models.Model):
         return unicode("%s" % (self.name))
 
 
-class ExtractedCell(StorablePhysicalObject, IndexByGroup):
+class ExtractedCell(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     sample = models.ForeignKey(Sample)
     protocol = models.ForeignKey(Protocol)
     notes = models.TextField(blank=True)
@@ -585,7 +592,7 @@ class ExtractedCell(StorablePhysicalObject, IndexByGroup):
         ]
 
 
-class ExtractedDNA(StorablePhysicalObject, IndexByGroup):
+class ExtractedDNA(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     sample = models.ForeignKey(Sample, null=True, blank=True)
     protocol = models.ForeignKey(Protocol)
     notes = models.TextField(blank=True)
@@ -694,7 +701,7 @@ class RTMDA(models.Model):
         return [f.attname for f in self._meta.fields]
 
 
-class SAGPlate(IndexByGroup):
+class SAGPlate(CreatedByUser, IndexByGroup):
     """SAGPlate is not a Container because we want to enforce all the same
     samples on the child wells and in addition store information about the
     Plate itself. The storage location is a key to ApparatusSubDivision,
@@ -758,7 +765,7 @@ class SAGPlate(IndexByGroup):
                 'notes']
 
 
-class SAGPlateDilution(IndexByGroup):
+class SAGPlateDilution(CreatedByUser, IndexByGroup):
     sag_plate = models.ForeignKey(SAGPlate)
     apparatus_subdivision = models.ForeignKey(ApparatusSubdivision)
     dilution = models.CharField(max_length=100)
@@ -854,7 +861,7 @@ class Metagenome(IndexByGroup):
                 'date']
 
 
-class Primer(StorablePhysicalObject):
+class Primer(CreatedByUser, StorablePhysicalObject):
     sequence = models.TextField()
     tmelt = models.DecimalField(u"tmelt (\u00B0C)", max_digits=10,
                                 decimal_places=2)
@@ -874,7 +881,7 @@ class Primer(StorablePhysicalObject):
         return [f.attname for f in self._meta.fields]
 
 
-class Amplicon(StorablePhysicalObject, IndexByGroup):
+class Amplicon(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     extracted_dna = models.ForeignKey(ExtractedDNA)
     diversity_report = models.CharField(max_length=100)
     buffer = models.CharField(max_length=100)
@@ -1035,7 +1042,7 @@ class DNAFromPureCulture(IndexByGroup):
         verbose_name = "DNA from pure culture"
 
 
-class DNALibrary(StorablePhysicalObject, IndexByGroup):
+class DNALibrary(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     amplicon = models.ForeignKey(Amplicon, blank=True, null=True)
     metagenome = models.ForeignKey(Metagenome, blank=True, null=True)
     sag = models.ForeignKey(SAG, null=True, blank=True, verbose_name="SAG")

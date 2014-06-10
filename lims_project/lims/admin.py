@@ -22,8 +22,10 @@ from lims.import_export_resources import SampleResource, ContainerResource
 
 try:
     from sh import lpr
+    LIMS_LPR = True
 except ImportError:
     print("lpr could not be imported", file=sys.stderr)
+    LIMS_LPR = False
     pass
 
 
@@ -44,33 +46,39 @@ for model in standard_models:
     admin.site.register(model, generate_all_fields_admin(model))
 
 
-def barcode_function_gen(model):
+def generate_barcode_print_action(btm):
+    """Generates a single print_barcode action function for a given barcode-to-template object"""
+    def print_barcode(modeladmin, request, queryset):
+        for q in queryset:
+            fields = ["{{{{ o.{f} }}}}".format(f=f) for f in btm.barcode_fields.split()]
+            # Shorten dates
+            #fields = [f.isoformat().split("T")[0] if isinstance(f, datetime.datetime) else f for f in fields]
+            #print("len: %d" % len(fields), file=sys.stderr)
+            # throw error if not enough fields are given
+            if len(fields) < 4:
+                print("Not enough fields given", file=sys.stderr)
+            out = btm.template.template.format(*fields)
+            t = Template(out)
+            c = Context({"o": q})
+            if LIMS_LPR:
+                lpr("-P", btm.printer.name, '-o', 'raw', _in=t.render(c))
+            else:
+                #print(out, file=sys.stderr)
+                print(t.render(c), file=sys.stderr)
+            messages.success(request, "Printing {} barcode on {} for {}".format(btm.template, btm.printer, q))
+    return print_barcode
+
+
+def generate_barcode_print_actions(model):
+    """Generates all print_barcode action functions for each printer/template
+    combination for a given model."""
     ct = ContentType.objects.get_for_model(model)
     btms = BarcodeToModel.objects.filter(content_type=ct)
 
-    action_functions = []
-
-    for btm in btms:
-        print(btm, file=sys.stderr)
-
-        def print_barcode(modeladmin, request, queryset):
-            for q in queryset:
-                fields = ["{{{{ o.{f} }}}}".format(f=f) for f in btm.barcode_fields.split()]
-                # Shorten dates
-                #fields = [f.isoformat().split("T")[0] if isinstance(f, datetime.datetime) else f for f in fields]
-                #print("len: %d" % len(fields), file=sys.stderr)
-                # throw error if not enough fields are given
-                if len(fields) < 4:
-                    print("Not enough fields given", file=sys.stderr)
-                out = btm.template.template.format(*fields)
-                t = Template(out)
-                c = Context({"o": q})
-                #print(out, file=sys.stderr)
-                print(t.render(c), file=sys.stderr)
-                #lpr("-P", btm.printer.name, '-o', 'raw', _in=out)
-                messages.success(request, "Printing {} barcode on {} for {}".format(btm.template, btm.printer, q))
-        action_functions.append((unicode(btm.template), (print_barcode, unicode(btm.template), "Print barcode {} on {}".format(btm.template, btm.printer))))
-        print(action_functions, file=sys.stderr)
+    action_functions = [(unicode(btm.template),
+                            (generate_barcode_print_action(btm),
+                             unicode(btm.template),
+                             "Print barcode {} on {}".format(btm.template, btm.printer))) for btm in btms]
 
     return action_functions
 
@@ -97,6 +105,11 @@ class AmpliconAdmin(admin.ModelAdmin):
         ContainerInline,
     ]
     raw_id_fields = ("extracted_dna",)
+
+    def get_actions(self, request):
+        actions = super(AmpliconAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(Amplicon)))
+        return actions
 admin.site.register(Amplicon, AmpliconAdmin)
 
 
@@ -166,6 +179,11 @@ class ContainerAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     # import_export change template to include csv
     import_template_name = 'import_export/lims_import.html'
 
+    def get_actions(self, request):
+        actions = super(ContainerAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(Container)))
+        return actions
+
     def get_nr_children(self, obj):
         return "%s" % str(obj.child.count())
     get_nr_children.short_description = "No of Children"
@@ -195,12 +213,11 @@ class SampleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     inlines = [
         ContainerInline,
     ]
-    #actions = [gen_hello("faka"), gen_hello("sup")] + [gen_hello("unkowit")]
 
     def get_actions(self, request):
         actions = super(SampleAdmin, self).get_actions(request)
-        print(actions, file=sys.stderr)
-        return dict(barcode_function_gen(Sample))
+        actions.update(dict(generate_barcode_print_actions(Sample)))
+        return actions
 
     #class Media:
     #    js = ('lims/admin_edit_button.js',)
@@ -255,6 +272,11 @@ class ExtractedCellAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ('index_by_group', 'uid')
     raw_id_fields = ("sample",)
+
+    def get_actions(self, request):
+        actions = super(ExtractedCellAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(ExtractedCell)))
+        return actions
 admin.site.register(ExtractedCell, ExtractedCellAdmin)
 
 
@@ -276,6 +298,11 @@ class ExtractedDNAAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ('index_by_group', 'uid')
     raw_id_fields = ("sample",)
+
+    def get_actions(self, request):
+        actions = super(ExtractedDNAAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(ExtractedDNAAdmin)))
+        return actions
 admin.site.register(ExtractedDNA, ExtractedDNAAdmin)
 
 
@@ -294,6 +321,11 @@ class SAGPlateAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ('index_by_group', 'uid')
     raw_id_fields = ("extracted_cell",)
+
+    def get_actions(self, request):
+        actions = super(SAGPlateAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(SAGPlate)))
+        return actions
 admin.site.register(SAGPlate, SAGPlateAdmin)
 
 
@@ -308,6 +340,11 @@ class SAGPlateDilutionAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ('index_by_group', 'uid')
     raw_id_fields = ("sag_plate",)
+
+    def get_actions(self, request):
+        actions = super(SAGPlateDilutionAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(SAGPlateDilution)))
+        return actions
 admin.site.register(SAGPlateDilution, SAGPlateDilutionAdmin)
 
 
@@ -329,6 +366,11 @@ class DNALibraryAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ('index_by_group', 'uid')
     raw_id_fields = ("amplicon", "metagenome", "sag", "pure_culture")
+
+    def get_actions(self, request):
+        actions = super(DNALibraryAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(DNALibrary)))
+        return actions
 admin.site.register(DNALibrary, DNALibraryAdmin)
 
 
@@ -342,6 +384,11 @@ class PrimerAdmin(admin.ModelAdmin):
     inlines = [
         ContainerInline,
     ]
+
+    def get_actions(self, request):
+        actions = super(PrimerAdmin, self).get_actions(request)
+        actions.update(dict(generate_barcode_print_actions(Primer)))
+        return actions
 admin.site.register(Primer, PrimerAdmin)
 
 
