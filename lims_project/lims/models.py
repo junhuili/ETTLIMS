@@ -87,7 +87,7 @@ class ApparatusSubdivision(models.Model):
 
 
 class BarcodePrinter(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, help_text="Fill in the name of a printer exactly as it is installed in CUPS. Use e.g. lpstat -p to show all available printers. The selected printer should support ZPL programming language.")
 
     def __unicode__(self):
         return unicode(self.name)
