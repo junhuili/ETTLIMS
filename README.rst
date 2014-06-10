@@ -5,8 +5,8 @@ ETTLIMS
 .. image:: https://travis-ci.org/BILS/ETTLIMS.svg?branch=master
   :target: https://travis-ci.org/BILS/ETTLIMS
 
-.. image:: https://coveralls.io/repos/BILS/SCGLIMS/badge.png?branch=master
-  :target: https://coveralls.io/r/BILS/SCGLIMS?branch=master
+.. image:: https://coveralls.io/repos/BILS/ETTLIMS/badge.png?branch=master
+  :target: https://coveralls.io/r/BILS/ETTLIMS?branch=master
 
 
 ETTLIMS is a Single Cell Genomics Lab Information Management System developed
@@ -21,7 +21,7 @@ Otherwise an amout of tweaking might be required in which case we would
 recommend forking the repository and only using certain elements.
 
 
-* Documentation: `<http://scglims.rtfd.org>`_
+* Documentation: `<http://ettlims.rtfd.org>`_
 * Demo: `<http://bit.ly/scglims-heroku>`_ (for admin user/pass inodb)
 * Presentation: `<http://bit.ly/limstalk>`_
 * GitHub: `<https://github.com/BILS/ETTLIMS/>`_
