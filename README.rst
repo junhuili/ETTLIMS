@@ -2,8 +2,8 @@
 ETTLIMS
 ====================
 
-.. image:: https://travis-ci.org/BILS/SCGLIMS.svg?branch=master
-  :target: https://travis-ci.org/BILS/SCGLIMS
+.. image:: https://travis-ci.org/BILS/ETTLIMS.svg?branch=master
+  :target: https://travis-ci.org/BILS/ETTLIMS
 
 .. image:: https://coveralls.io/repos/BILS/SCGLIMS/badge.png?branch=master
   :target: https://coveralls.io/r/BILS/SCGLIMS?branch=master
