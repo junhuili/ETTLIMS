@@ -92,7 +92,7 @@ First you need to `set up PostgreSQL`_. You'll have to create a database django
 and user django, see the `development settings`_.
 
 .. _`set up PostgreSQL`: http://www.techrepublic.com/article/set-up-a-postgresql-database-server-on-linux/
-.. _`development settings`_: lims_project/lims_project/settings/development.py
+.. _`development settings`: http://github.com/BILS/SCGLIMS/blob/master/lims_project/lims_project/settings/development.py
 
 Then the commands are similar to running it locally, but you change
 ``lims_project.settings.local``
