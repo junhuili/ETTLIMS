@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Single Cell Genomics Lab Information Management System documentation build configuration file, created by
+# Ettema Lab Information Management System documentation build configuration file, created by
 # sphinx-quickstart on Fri May 23 16:04:38 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -51,7 +51,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Single Cell Genomics Lab Information Management System'
+project = u'Ettema Lab Information Management System'
 copyright = u'2014, Ino de Bruijn, Lionel Guy'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -195,7 +195,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'SingleCellGenomicsLabInformationManagementSystemdoc'
+htmlhelp_basename = 'EttemaLabInformationManagementSystemdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -215,7 +215,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'SingleCellGenomicsLabInformationManagementSystem.tex', u'Single Cell Genomics Lab Information Management System Documentation',
+  ('index', 'EttemaLabInformationManagementSystem.tex', u'Ettema Lab Information Management System Documentation',
    u'Ino de Bruijn, Lionel Guy', 'manual'),
 ]
 
@@ -245,7 +245,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'singlecellgenomicslabinformationmanagementsystem', u'Single Cell Genomics Lab Information Management System Documentation',
+    ('index', 'ettemalabinformationmanagementsystem', u'Ettema Lab Information Management System Documentation',
      [u'Ino de Bruijn, Lionel Guy'], 1)
 ]
 
@@ -259,8 +259,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'SingleCellGenomicsLabInformationManagementSystem', u'Single Cell Genomics Lab Information Management System Documentation',
-   u'Ino de Bruijn, Lionel Guy', 'SingleCellGenomicsLabInformationManagementSystem', 'One line description of project.',
+  ('index', 'EttemaLabInformationManagementSystem', u'Ettema Lab Information Management System Documentation',
+   u'Ino de Bruijn, Lionel Guy', 'EttemaLabInformationManagementSystem', 'One line description of project.',
    'Miscellaneous'),
 ]
 
