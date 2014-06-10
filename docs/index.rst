@@ -1,12 +1,12 @@
-.. Single Cell Genomics Lab Information Management System documentation master file, created by
+.. Ettema Lab Information Management System documentation master file, created by
    sphinx-quickstart on Fri May 23 16:04:38 2014.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-SCGLIMS
+ETTLIMS
 ==================================================================================
-SCGLIMS is a Single Cell Genomics Lab Information Management System developed
-for the `Ettema Lab`_ by `BILS`_.
+ETTLIMS is a Lab Information Management System developed for the `Ettema Lab`_
+by `BILS`_.
 
 This documentation has the following sections:
 
@@ -25,10 +25,10 @@ This documentation has the following sections:
 
 Other links:
 
-* Documentation: `<http://scglims.rtfd.org>`_
+* Documentation: `<http://ettlims.rtfd.org>`_
 * Demo: `<http://bit.ly/scglims-heroku>`_ (for admin user/pass inodb)
 * Presentation: `<http://bit.ly/limstalk>`_
-* GitHub: `<https://github.com/BILS/SCGLIMS/>`_
+* GitHub: `<https://github.com/BILS/ETTLIMS/>`_
 * Free software: GPLv3 License
 
 .. * PyPI: Not yet available
