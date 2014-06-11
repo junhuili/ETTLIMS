@@ -22,7 +22,7 @@ recommend forking the repository and only using certain elements.
 
 
 * Documentation: `<http://ettlims.rtfd.org>`_
-* Demo: `<http://bit.ly/scglims-heroku>`_ (for admin user/pass inodb)
+* Demo: `<http://bit.ly/ettlims-heroku>`_ (for admin user/pass inodb)
 * Presentation: `<http://bit.ly/limstalk>`_
 * GitHub: `<https://github.com/BILS/ETTLIMS/>`_
 * Free software: GPLv3 License
