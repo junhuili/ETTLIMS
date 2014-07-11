@@ -301,7 +301,7 @@ class ExtractedDNAAdmin(admin.ModelAdmin):
 
     def get_actions(self, request):
         actions = super(ExtractedDNAAdmin, self).get_actions(request)
-        actions.update(dict(generate_barcode_print_actions(ExtractedDNAAdmin)))
+        actions.update(dict(generate_barcode_print_actions(ExtractedDNA)))
         return actions
 admin.site.register(ExtractedDNA, ExtractedDNAAdmin)
 
