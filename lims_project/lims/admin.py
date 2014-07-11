@@ -55,9 +55,15 @@ def generate_barcode_print_action(btm):
             #fields = [f.isoformat().split("T")[0] if isinstance(f, datetime.datetime) else f for f in fields]
             #print("len: %d" % len(fields), file=sys.stderr)
             # throw error if not enough fields are given
-            if len(fields) < 4:
+            if len(fields) < btm.template.nr_fields:
                 print("Not enough fields given", file=sys.stderr)
-            out = btm.template.template.format(*fields)
+
+            # change template to work for python2.6, replace {} with {0}, {1} etc
+            templ = str(btm.template.template)
+            for i in range(btm.template.nr_fields):
+                templ = templ.replace("{}", "{{{0}}}".format(i), 1)
+
+            out = templ.format(*fields)
             t = Template(out)
             c = Context({"o": q})
             if LIMS_LPR:
@@ -65,7 +71,7 @@ def generate_barcode_print_action(btm):
             else:
                 #print(out, file=sys.stderr)
                 print(t.render(c), file=sys.stderr)
-            messages.success(request, "Printing {} barcode on {} for {}".format(btm.template, btm.printer, q))
+            messages.success(request, "Printing {0} barcode on {1} for {2}".format(btm.template, btm.printer, q))
     return print_barcode
 
 
@@ -78,7 +84,7 @@ def generate_barcode_print_actions(model):
     action_functions = [(unicode(btm.template),
                             (generate_barcode_print_action(btm),
                              unicode(btm.template),
-                             "Print barcode {} on {}".format(btm.template, btm.printer))) for btm in btms]
+                             "Print barcode {0} on {1}".format(btm.template, btm.printer))) for btm in btms]
 
     return action_functions
 
