@@ -480,7 +480,7 @@ class Sample(CreatedByUser, StorablePhysicalObject, models.Model):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def barcode(self):
@@ -565,7 +565,7 @@ class ExtractedCell(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def group(self):
@@ -612,7 +612,7 @@ class ExtractedDNA(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def group_id_keyword(self):
@@ -727,7 +727,7 @@ class SAGPlate(CreatedByUser, IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def sample(self):
@@ -785,7 +785,7 @@ class SAGPlateDilution(CreatedByUser, IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def sample(self):
@@ -837,7 +837,7 @@ class Metagenome(IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def sample(self):
@@ -901,7 +901,7 @@ class Amplicon(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def sample(self):
@@ -945,7 +945,7 @@ class SAG(models.Model):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     def save(self):
         if sum((bool(self.sag_plate_dilution),
@@ -1012,7 +1012,7 @@ class DNAFromPureCulture(IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def sample(self):
@@ -1070,7 +1070,7 @@ class DNALibrary(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     @property
     def dna_type(self):
@@ -1170,7 +1170,7 @@ class SequencingRun(models.Model):
     objects = UIDManager()
 
     def natural_key(self):
-        return self.uid
+        return (self.uid, )
 
     def __unicode__(self):
         return unicode("%s") % (self.uid)
