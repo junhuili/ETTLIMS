@@ -238,6 +238,10 @@ class Container(models.Model):
             apparatus_subdivision."""
             raise ValidationError({"parent": [error_msg, ],
                                    "apparatus_subdivision": [error_msg, ]})
+        elif self.content_type and not self.object_id:
+            error_msg = """If content_type is set an object_id should also be set."""
+            raise ValidationError({"content_type": [error_msg, ],
+                                   "object_id": [error_msg, ]})
         super(Container, self).clean()
 
     @property
@@ -304,7 +308,7 @@ class StorablePhysicalObject(models.Model):
                 error_msg = "Container {0} is divisible. You should store it in"
                 "a container that can't be subdivided any further.".format(c)
                 raise(ValidationError({"containers": [error_msg, ]}))
-            super(StorablePhysicalObject, self).clean()
+        super(StorablePhysicalObject, self).clean()
 
     class Meta:
         abstract = True
@@ -530,15 +534,6 @@ class Sample(CreatedByUser, StorablePhysicalObject, models.Model):
             'container',
             'date',
         ]
-
-    @property
-    def username(self):
-        ct = ContentType.objects.get_for_model(type(self))
-        first_log = LogEntry.objects.filter(content_type=ct, object_id=self.id).first()
-        if first_log:
-            return first_log.user.username
-        else:
-            return "unknown"
 
 
 class Protocol(models.Model):
