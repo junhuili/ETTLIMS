@@ -471,6 +471,36 @@ class ProtocolAdmin(admin.ModelAdmin):
 admin.site.register(Protocol, ProtocolAdmin)
 
 
+class ContentTypeAdmin(admin.ModelAdmin):
+    readonly_fields = [
+        'id',
+        'app_label',
+        'name',
+        'model',
+    ]
+    list_display = [
+        'id',
+        'app_label',
+        'name',
+    ]
+
+    def get_actions(self, request):
+        #Disable delete
+        actions = super(ContentTypeAdmin, self).get_actions(request)
+        del actions['delete_selected']
+        return actions
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser and request.method != 'POST'
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+admin.site.register(ContentType, ContentTypeAdmin)
+
+
 class LogEntryAdmin(admin.ModelAdmin):
     """From: https://djangosnippets.org/snippets/2484/"""
     date_hierarchy = 'action_time'
