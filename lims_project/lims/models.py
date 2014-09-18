@@ -1,6 +1,7 @@
 from __future__ import print_function
 import sys
 import re
+import string
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -401,8 +402,8 @@ class IndexByGroup(models.Model):
 
 
 class Collaborator(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, help_text='Please use these characters <b>' + string.ascii_lowercase + '1234567890</b>')
+    last_name = models.CharField(max_length=100, help_text='Please use these characters <b>' + string.ascii_lowercase + '1234567890</b>')
     institution = models.CharField(max_length=100)
     address = models.TextField()
     phone = models.CharField(max_length=100, blank=True)
