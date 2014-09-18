@@ -214,6 +214,12 @@ class SampleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         'uid',
         'barcode',
     ] + editables
+    search_fields = [
+        'uid',
+    ]
+    list_filter = [
+        'collaborator',
+    ]
     # import_export change template to include csv
     import_template_name = 'import_export/lims_import.html'
     inlines = [
