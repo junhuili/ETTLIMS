@@ -775,7 +775,7 @@ class SAGPlateDilution(CreatedByUser, IndexByGroup):
     uid = models.CharField("UID", max_length=30, unique=True, default="Automatically generated",
         help_text="UID consists of the sample UID followed by a character or count [a-z0-9] i.e. 10Y31a")
 
-    group_id_keyword = "extracted_cell__sample__id"
+    group_id_keyword = "sag_plate__extracted_cell__sample__id"
     character_list = [chr(ord('a') + i) for i in range(26)] + range(10)  # [a-z0-9]
 
     objects = UIDManager()
