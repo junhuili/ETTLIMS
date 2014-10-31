@@ -459,7 +459,7 @@ class Sample(CreatedByUser, StorablePhysicalObject, models.Model):
     temperature = models.DecimalField(u"Temperature \u00B0C", max_digits=10,
         decimal_places=2, blank=True, null=True)
     ph = models.DecimalField(" pH", max_digits=10, decimal_places=2, blank=True, null=True)
-    salinity = models.DecimalField("Salinity unit g mL\u207B\u00B9)", max_digits=10, decimal_places=2, blank=True, null=True)
+    salinity = models.DecimalField(u"Salinity unit g mL\u207B\u00B9)", max_digits=10, decimal_places=2, blank=True, null=True)
     depth = models.DecimalField("Depth (m)", max_digits=10, decimal_places=2, blank=True, null=True)
     # Latitude/Longitude decimals like decimal degress with plus and minus.
     # Minus is south of the equator, positive implies north.
@@ -775,7 +775,7 @@ class SAGPlateDilution(CreatedByUser, IndexByGroup):
     uid = models.CharField("UID", max_length=30, unique=True, default="Automatically generated",
         help_text="UID consists of the sample UID followed by a character or count [a-z0-9] i.e. 10Y31a")
 
-    group_id_keyword = "extracted_cell__sample__id"
+    group_id_keyword = "sag_plate__extracted_cell__sample__id"
     character_list = [chr(ord('a') + i) for i in range(26)] + range(10)  # [a-z0-9]
 
     objects = UIDManager()
@@ -931,7 +931,7 @@ class SAG(models.Model):
     sag_plate = models.ForeignKey(SAGPlate, blank=True, null=True)
     sag_plate_dilution = models.ForeignKey(SAGPlateDilution, blank=True, null=True)
     well = models.CharField(max_length=3)
-    concentration = models.DecimalField(u"Concentration (mol L\u207B\u00B9)",
+    concentration = models.DecimalField(u"Concentration (ng \u03bcL\u207B\u00B9)", 
                                         max_length=100, max_digits=10,
                                         decimal_places=5)
     date = models.DateTimeField(default=timezone.now, blank=True)
