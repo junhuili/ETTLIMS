@@ -459,7 +459,7 @@ class Sample(CreatedByUser, StorablePhysicalObject, models.Model):
     temperature = models.DecimalField(u"Temperature \u00B0C", max_digits=10,
         decimal_places=2, blank=True, null=True)
     ph = models.DecimalField(" pH", max_digits=10, decimal_places=2, blank=True, null=True)
-    salinity = models.DecimalField("Salinity unit(?))", max_digits=10, decimal_places=2, blank=True, null=True)
+    salinity = models.DecimalField(u"Salinity unit g mL\u207B\u00B9)", max_digits=10, decimal_places=2, blank=True, null=True)
     depth = models.DecimalField("Depth (m)", max_digits=10, decimal_places=2, blank=True, null=True)
     # Latitude/Longitude decimals like decimal degress with plus and minus.
     # Minus is south of the equator, positive implies north.
@@ -597,7 +597,7 @@ class ExtractedDNA(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     protocol = models.ForeignKey(Protocol)
     notes = models.TextField(blank=True)
     extracted_cell = models.ForeignKey(ExtractedCell, null=True, blank=True)
-    concentration = models.DecimalField(u"Concentration (mol L\u207B\u00B9)",
+    concentration = models.DecimalField(u"Concentration (ng \u03bcL\u207B\u00B9)",
                                         max_length=100, max_digits=10,
                                         decimal_places=5)
     buffer = models.CharField(max_length=100)
@@ -865,7 +865,7 @@ class Primer(CreatedByUser, StorablePhysicalObject):
     sequence = models.TextField()
     tmelt = models.DecimalField(u"tmelt (\u00B0C)", max_digits=10,
                                 decimal_places=2)
-    concentration = models.DecimalField(u"Concentration (mol L\u207B\u00B9)",
+    concentration = models.DecimalField(u"Concentration (ng \u03bcL\u207B\u00B9)",
                                         max_length=100, max_digits=10,
                                         decimal_places=5)
     stock = models.PositiveIntegerField()
@@ -931,7 +931,7 @@ class SAG(models.Model):
     sag_plate = models.ForeignKey(SAGPlate, blank=True, null=True)
     sag_plate_dilution = models.ForeignKey(SAGPlateDilution, blank=True, null=True)
     well = models.CharField(max_length=3)
-    concentration = models.DecimalField(u"Concentration (mol L\u207B\u00B9)",
+    concentration = models.DecimalField(u"Concentration (ng \u03bcL\u207B\u00B9)", 
                                         max_length=100, max_digits=10,
                                         decimal_places=5)
     date = models.DateTimeField(default=timezone.now, blank=True)
@@ -995,7 +995,7 @@ class SAG(models.Model):
 
 class DNAFromPureCulture(IndexByGroup):
     extracted_dna = models.ForeignKey(ExtractedDNA)
-    concentration = models.DecimalField(u"Concentration (mol L\u207B\u00B9)",
+    concentration = models.DecimalField(u"Concentration (ng \u03bcL\u207B\u00B9)",
                                         max_length=100, max_digits=10,
                                         decimal_places=5)
     date = models.DateTimeField(default=timezone.now, blank=True)
@@ -1052,7 +1052,7 @@ class DNALibrary(CreatedByUser, StorablePhysicalObject, IndexByGroup):
     i7 = models.CharField(max_length=100)
     i5 = models.CharField(max_length=100)
     sample_name_on_platform = models.CharField(max_length=100, unique=True)
-    concentration = models.DecimalField(u"Concentration (mol L\u207B\u00B9)",
+    concentration = models.DecimalField(u"Concentration (ng \u03bcL\u207B\u00B9)", #(mol L\u207B\u00B9)
                                         max_length=100, max_digits=10,
                                         decimal_places=5)
 
