@@ -1,7 +1,7 @@
 Contributing
 ============
 
-SCGLIMS is open-source and, as such, grows (or shrinks) & improves in part due
+ETTLIMS is open-source and, as such, grows (or shrinks) & improves in part due
 to the community. Below are some guidelines on how to help with the project.
 They are based on the guidelines of
 [django-import-export](https://github.com/bmihelac/django-import-export).
