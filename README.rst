@@ -9,8 +9,8 @@ ETTLIMS
   :target: https://coveralls.io/r/BILS/ETTLIMS?branch=master
 
 
-ETTLIMS is a Single Cell Genomics Lab Information Management System developed
-for the `Ettema Lab`_ by `BILS`_.
+ETTLIMS is a Single Cell Genomics Lab Information Management System for Metagenomic
+and Single Cell Sequencing developed for the `Ettema Lab`_ by `BILS`_.
 
 The database implements the workflow of the Ettema Lab:
 
