@@ -13,7 +13,7 @@ Philosophy
 *  is GPL-licensed. All contributed code must be either
   * the original work of the author, contributed under the GPL, or...
   * work taken from another project released under a GPL-compatible license.
-* SCGLIMS' git master branch should always be stable, production-ready &
+* ETTLIMS' git master branch should always be stable, production-ready &
   passing all tests
 
 
@@ -21,7 +21,7 @@ Guidelines For Reporting An Issue/Feature
 -----------------------------------------
 
 So you've found a bug or have a great idea for a feature. Here's the steps you
-should take to help get it added/fixed in SCGLIMS:
+should take to help get it added/fixed in ETTLIMS:
 
 * First, check to see if there's an existing issue/pull request for the
   bug/feature. All issues are at https://github.com/bils/scglims/issues
@@ -44,7 +44,7 @@ If you're ready to take the plunge & contribute back some code/docs, the
 process should look like:
 
 * Fork the project on GitHub into your own account.
-* Clone your copy of SCGLIMS.
+* Clone your copy of ETTLIMS.
 * Make a new branch in git & commit your changes there.
 * Push your new branch up to GitHub.
 * Again, ensure there isn't already an issue or pull request out there on it.
@@ -69,4 +69,4 @@ In order to be merged into django-import-export, contributions must have the fol
 * Add yourself to the AUTHORS file.
 
 If your contribution lacks any of these things, they will have to be added
-by a core contributor before being merged into SCGLIMS properly.
+by a core contributor before being merged into ETTLIMS properly.
